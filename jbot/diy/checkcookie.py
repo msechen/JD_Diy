@@ -47,10 +47,10 @@ async def checkCookie(cookie):
 async def mycheckcookie(event):
     try:
         msg = await jdbot.send_message(chat_id, "正在检测 cookie 过期情况……")
-        text, o, res = '检测结果\n\n', '\n\t   └ ', ""
-        expireds, valids, changes, removes = [], [], [], []
+        text, o, res = '检测结果\n\n', '\n\t   └ ',  ""
+        expireds, valids, changes, removes = [], [], [],[]
         if V4:
-            cookies = get_cks(CONFIG_SH_FILE)
+            cookies = get_cks(CONFIG_SH_FILE)[0]
             for cookie in cookies:
                 cknum = cookies.index(cookie) + 1
                 check = await checkCookie(cookie)
@@ -198,3 +198,4 @@ async def mycheckcookie(event):
         tip = '建议百度/谷歌进行查询'
         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
         logger.error(f"错误--->{str(e)}")
+
