@@ -9,7 +9,7 @@ fi
 dir_jbot=$root/jbot
 dir_diy=$dir_jbot/diy
 dir_repo=$root/repo
-url="https://raw.githubusercontent.com/chiupam/JD_Diy/master/jbot/diy/user.py"
+url="https://raw.githubusercontent.com/msechen/JD_Diy/main/jbot/diy/user.py"
 file_user=$dir_diy/user.py
 bot_set=$root/config/diybotset.json
 
