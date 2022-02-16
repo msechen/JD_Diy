@@ -6,6 +6,9 @@ else
   root=/ql
 fi
 
+#升级最新版telethon客户端
+pip3 install telethon --upgrade
+
 dir_jbot=$root/jbot
 dir_diy=$dir_jbot/diy
 dir_repo=$root/repo
