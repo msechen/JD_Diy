@@ -50,10 +50,10 @@ git_clone() {
 diybot() {
   if [ -d $diybot_repo ]; then
     echo "更新 diybot 所需文件"
-    git_pull $diybot_url $diybot_repo "master"
+    git_pull $diybot_url $diybot_repo "main"
   else
     echo "下载 diybot 所需文件"
-    git_clone $diybot_url $diybot_repo "master"
+    git_clone $diybot_url $diybot_repo "main"
   fi
 }
 
