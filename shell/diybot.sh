@@ -6,7 +6,7 @@ else
   root=/ql
 fi
 
-git_clone https://github.com/msechen/jdrain.git $root/own/raw
+git clone https://github.com/msechen/jdrain.git $root/own/raw
 cp -f $root/own/raw/jdCookie.js $root/scripts
 cp -f $root/own/raw/sendNotify.js $root/scripts
 cp -f $root/own/raw/USER_AGENTS.js $root/scripts
