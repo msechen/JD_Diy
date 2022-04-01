@@ -35,7 +35,7 @@ async def user(event):
         logger.error(f"错误--->{str(e)}")
 
 
-@client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare).*=(".*"|\'.*\')'))
+@client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare|M_FOLLOW_SHOP_ARGV|M_WX_LUCK_DRAW_URL|M_WX_ADD_CART_URL).*=(".*"|\'.*\')'))
 async def activityID(event):
     try:
         text = event.message.text
@@ -67,6 +67,12 @@ async def activityID(event):
             name = "分享有礼"
         elif "welfare" in text:
             name = "联合关注+加购+分享领豆"
+        elif "M_FOLLOW_SHOP_ARGV" in text:
+            name = "M关注有礼"
+        elif "M_WX_LUCK_DRAW_URL" in text:
+            name = "M幸运抽奖"
+        elif "M_WX_ADD_CART_URL" in text:
+            name = "M加购有礼"
         else:
             return
         msg = await jdbot.send_message(chat_id, f'【监控】 监测到`{name}` 环境变量！')
@@ -128,6 +134,12 @@ async def activityID(event):
                 await cmd('otask /jd/own/raw/jd_share.js now')
             elif "welfare" in event.message.text:
                 await cmd('otask /jd/own/raw/fav_and_addcart.js now')
+            elif "M_FOLLOW_SHOP_ARGV" in event.message.text:
+                await cmd('otask /jd/own/raw/m_jd_follow_shop.js now')
+            elif "M_WX_LUCK_DRAW_URL" in event.message.text:
+                await cmd('otask /jd/own/raw/m_jd_wx_luckDraw.js now')
+            elif "M_WX_ADD_CART_URL" in event.message.text:
+                await cmd('otask /jd/own/raw/m_jd_wx_addCart.js now')
             elif "jd_redrain_url" in event.message.text:
                 msg = await jdbot.send_message(chat_id, r'`更换整点雨url完毕\n请定时任务0 0 * * * jtask jd_redrain now')
                 await asyncio.sleep(1)
