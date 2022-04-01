@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -8,27 +8,22 @@ import os
 import re
 import sys
 import time
-import requests
 
 from telethon import events, TelegramClient
 
-from .. import chat_id, jdbot, logger, API_ID, API_HASH, PROXY_START, proxy, CONFIG_DIR, JD_DIR, TOKEN, BOT_DIR
-from ..bot.utils import cmd, V4, QL, CONFIG_SH_FILE, get_cks
-from ..diy.utils import getbean, my_chat_id, myzdjr_chatIds, shoptokenIds
-from ..diy.utils import read, write
+from .. import chat_id, jdbot, logger, API_ID, API_HASH, PROXY_START, proxy, JD_DIR, TOKEN
+from ..bot.utils import cmd, V4, QL, CONFIG_SH_FILE, get_cks, AUTH_FILE
+from ..diy.utils import getbean, rwcon, my_chat_id, myzdjr_chatIds, shoptokenIds
 
 bot_id = int(TOKEN.split(":")[0])
 
-if PROXY_START:
-    client = TelegramClient("user", API_ID, API_HASH, proxy=proxy, connection_retries=None).start()
-else:
-    client = TelegramClient("user", API_ID, API_HASH, connection_retries=None).start()
+client = TelegramClient("user", API_ID, API_HASH, proxy=proxy, connection_retries=None).start() if PROXY_START else TelegramClient("user", API_ID, API_HASH, connection_retries=None).start()
 
 
 @client.on(events.NewMessage(chats=[bot_id, my_chat_id], from_users=chat_id, pattern=r"^user(\?|\？)$"))
 async def user(event):
     try:
-        msg = await jdbot.send_message(chat_id, '你好无聊。。。\n我在监控。。。\n不要烦我。。。')
+        msg = await jdbot.send_message(chat_id, r'`user.py`监控已正常启动！')
         await asyncio.sleep(5)
         await jdbot.delete_messages(chat_id, msg)
     except Exception as e:
@@ -40,184 +35,111 @@ async def user(event):
         logger.error(f"错误--->{str(e)}")
 
 
-@client.on(events.NewMessage(chats=[-1001320212725, my_chat_id]))
-async def follow(event):
-    try:
-        url = re.findall(re.compile(r"[(](https://api\.m\.jd\.com.*?)[)]", re.S), event.message.text)
-        if not url:
-            return
-        i = 0
-        info = '关注店铺\n\n'
-        for cookie in get_cks(CONFIG_SH_FILE)[0]:
-            i += 1
-            info += getbean(i, cookie, url[0])
-        await jdbot.send_message(chat_id, info)
-    except Exception as e:
-        title = "【💥错误💥】"
-        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-        function = "函数名：" + sys._getframe().f_code.co_name
-        tip = '建议百度/谷歌进行查询'
-        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-        logger.error(f"错误--->{str(e)}")
-
-
-@client.on(events.NewMessage(chats=[-1001159808620, my_chat_id], pattern=r".*京豆雨.*"))
-async def red(event):
-    """
-    龙王庙京豆雨
-    关注频道：https://t.me/longzhuzhu
-    """
-    try:
-        file = "jredrain.sh"
-        if not os.path.exists(f'{JD_DIR}/{file}'):
-            cmdtext = f'cd {JD_DIR} && wget https://raw.githubusercontent.com/chiupam/JD_Diy/master/other/{file}'
-            await cmd(cmdtext)
-            if not os.path.exists(f'{JD_DIR}/{file}'):
-                await jdbot.send_message(chat_id, f"【龙王庙】\n\n监控到RRA，但是缺少{file}文件，无法执行定时")
-                return
-        message = event.message.text
-        RRAs = re.findall(r'RRA.*', message)
-        Times = re.findall(r'开始时间.*', message)
-        for RRA in RRAs:
-            i = RRAs.index(RRA)
-            cmdtext = f"/cmd bash {JD_DIR}/{file} {RRA}"
-            Time_1 = Times[i].split(" ")[0].split("-")
-            Time_2 = Times[i].split(" ")[1].split(":")
-            Time_3 = time.localtime()
-            year, mon, mday = Time_3[0], Time_3[1], Time_3[2]
-            if int(Time_2[0]) >= 8:
-                await client.send_message(bot_id, cmdtext, schedule=datetime.datetime(year, int(Time_1[1]), int(Time_1[2]), int(Time_2[0]) - 8 , int(Time_2[1]), 0, 0))
-            else:
-                await client.send_message(bot_id, cmdtext, schedule=datetime.datetime(year, int(Time_1[1]), int(Time_1[2]) - 1, int(Time_2[0]) + 16, int(Time_2[1]), 0, 0))
-            await jdbot.send_message(chat_id, f'监控到RRA：{RRA}\n预定时间：{Times[i].split("：")[1]}\n\n将在预定时间执行脚本，具体请查看当前机器人的定时任务')
-    except Exception as e:
-        title = "【💥错误💥】"
-        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-        function = "函数名：" + sys._getframe().f_code.co_name
-        tip = '建议百度/谷歌进行查询'
-        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-        logger.error(f"错误--->{str(e)}")
-
-
-@client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(jd_zdjr_activity|jd_joinTeam_activity|FAV).*=(".*"|\'.*\')'))
+@client.on(events.NewMessage(chats=[-1001728533280, bot_id, myzdjr_chatIds], pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare).*=(".*"|\'.*\')'))
 async def activityID(event):
     try:
         text = event.message.text
-        if "jd_zdjr_activity" in text:
-            activity = "jd_zdjr_activity"
-        elif "jd_joinTeam_activity" in text:
-            activity = "jd_joinTeam_activity"
-        elif "FAV_SHOP" in text:
-            activity = "FAV_SHOP"
-        msg = await jdbot.send_message(chat_id, f'监控到 {activity} 环境变量')
+        if "computer_activityId" in text:
+            name = "电脑配件"
+        elif "comm_activityIDList" in text:
+            name = "jdjoy_open通用ID任务"
+        elif "jd_mhurlList" in text:
+            name = "盲盒任务抽京豆"
+        elif "jd_nzmhurl" in text:
+            name = "女装盲盒抽京豆"
+        elif "wish_appIdArrList" in text:
+            name = "许愿池抽奖机"
+        elif "jd_redrain_url" in text:
+            name = "整点京豆雨"
+        elif "jd_redrain_half_url" in text:
+            name = "半点京豆雨"
+        elif "M_WX_COLLECT_CARD_URL" in text:
+            name = "集卡任务"
+        elif "jd_cjhy_activityId" in text:
+            name = "cj组队瓜分"
+        elif "jd_zdjr_activityId" in text:
+            name = "lz组队瓜分"
+        elif "VENDER_ID" in text:
+            name = "入会开卡领豆"
+        elif "WXGAME_ACT_ID" in text:
+            name = "打豆豆游戏"
+        elif "SHARE_ACTIVITY_ID" in text:
+            name = "分享有礼"
+        elif "welfare" in text:
+            name = "联合关注+加购+分享领豆"
+        else:
+            return
+        msg = await jdbot.send_message(chat_id, f'【监控】 监测到`{name}` 环境变量！')
         messages = event.message.text.split("\n")
         change = ""
         for message in messages:
+            if "export " not in message:
+                continue
             kv = message.replace("export ", "")
             key = kv.split("=")[0]
             value = re.findall(r'"([^"]*)"', kv)[0]
-            if "jd_zdjr_activityId" in key and len(value) != 32:
-                await jdbot.edit_message(msg, f"这是一趟灵车，不上车了\n\n{event.message.text}")
-                return
-            with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f1:
-                configs = f1.read()
+            configs = rwcon("str")
             if kv in configs:
                 continue
             if key in configs:
-                configs = re.sub(f'{key}=(\"|\').*(\"|\')', kv, configs)
-                change += f"替换 {activity} 环境变量成功\n{kv}\n\n"
+                configs = re.sub(f'{key}=("|\').*("|\')', kv, configs)
+                change += f"【替换】 `{name}` 环境变量成功\n`{kv}`\n\n"
                 msg = await jdbot.edit_message(msg, change)
             else:
                 if V4:
-                    with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-                        configs = f2.readlines()
+                    end_line = 0
+                    configs = rwcon("list")
                     for config in configs:
-                        if config.find("第五区域") != -1 and config.find("↑") != -1:
-                            end_line = configs.index(config)
+                        if "第五区域" in config and "↑" in config:
+                            end_line = configs.index(config) - 1
                             break
-                    configs.insert(end_line - 2, f'export {key}="{value}"\n')
-                    configs = ''.join(configs)
+                    configs.insert(end_line, f'export {key}="{value}"\n')
                 else:
-                    with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-                        configs = f2.read()
+                    configs = rwcon("str")
                     configs += f'export {key}="{value}"\n'
-                change += f"新增 {activity} 环境变量成功\n{kv}\n\n"
+                change += f"【新增】 `{name}` 环境变量成功\n`{kv}`\n\n"
                 msg = await jdbot.edit_message(msg, change)
-            with open(f"{CONFIG_DIR}/config.sh", 'w', encoding='utf-8') as f3:
-                f3.write(configs)
+            rwcon(configs)
         if len(change) == 0:
-            await jdbot.edit_message(msg, f"目前配置中的 {activity} 环境变量无需改动")
+            await jdbot.edit_message(msg, f"【取消】 `{name}` 环境变量无需改动！")
             return
         try:
-            if "jd_zdjr_activity" in event.message.text:
-                from ..diy.diy import smiek_jd_zdjr
-                await smiek_jd_zdjr()
-            elif "jd_joinTeam_activityId" in event.message.text:
-                from ..diy.diy import jd_joinTeam_activityId
-                await jd_joinTeam_activityId()
-            elif "FAV_SHOP_ID" in event.message.text:
-                from ..diy.diy import jd_fav_shop_gift
-                await jd_fav_shop_gift()
-        except:
-            None
-    except Exception as e:
-        title = "【💥错误💥】"
-        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-        function = "函数名：" + sys._getframe().f_code.co_name
-        tip = '建议百度/谷歌进行查询'
-        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-        logger.error(f"错误--->{str(e)}")
-
-
-@client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(jd_zdjr_activity|jd_joinTeam_activity).*=(".*"|\'.*\')'))
-async def activityID(event):
-    try:
-        text = event.message.text
-        if "jd_zdjr_activity" in text:
-            activity = "jd_zdjr_activity"
-        elif "jd_joinTeam_activity" in text:
-            activity = "jd_joinTeam_activity"
-        msg = await jdbot.send_message(chat_id, f'监控到 {activity} 环境变量')
-        messages = event.message.text.split("\n")
-        change = ""
-        for message in messages:
-            kv = message.replace("export ", "")
-            key = kv.split("=")[0]
-            value = re.findall(r'"([^"]*)"', kv)[0]
-            if "jd_zdjr_activityId" in key and len(value) != 32:
-                await jdbot.edit_message(msg, f"这是一趟灵车，不上车了\n\n{event.message.text}")
-                return
-            configs = read("str")
-            if kv in configs:
-                continue
-            if key in configs:
-                configs = re.sub(f'{key}=(\"|\').*(\"|\')', kv, configs)
-                change += f"替换 {activity} 环境变量成功\n{kv}\n\n"
-                msg = await jdbot.edit_message(msg, change)
+            if "computer_activityId" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_computer.js now')
+            elif "comm_activityIDList" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_joyjd_open.js now')
+            elif "jd_mhurlList" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_mhtask.js now')
+            elif "jd_nzmhurl" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_nzmh.js now')
+            elif "wish_appIdArrList" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_wish.js now')
+            elif "M_WX_COLLECT_CARD_URL" in event.message.text:
+                await cmd('otask /jd/own/raw/m_jd_wx_collectCard.js now')
+            elif "jd_cjhy_activityId" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_cjzdgf.js now')
+            elif "jd_zdjr_activityId" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_zdjr.js now')
+            elif "VENDER_ID" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_OpenCard_Force.js now')
+            elif "WXGAME_ACT_ID" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_doudou.js now')
+            elif "SHARE_ACTIVITY_ID" in event.message.text:
+                await cmd('otask /jd/own/raw/jd_share.js now')
+            elif "welfare" in event.message.text:
+                await cmd('otask /jd/own/raw/fav_and_addcart.js now')
+            elif "jd_redrain_url" in event.message.text:
+                msg = await jdbot.send_message(chat_id, r'`更换整点雨url完毕\n请定时任务0 0 * * * jtask jd_redrain now')
+                await asyncio.sleep(1)
+                await jdbot.delete_messages(chat_id, msg)
+            elif "jd_redrain_half_url" in event.message.text:
+                msg = await jdbot.send_message(chat_id, r'`更换半点雨url完毕\n请定时任务30 21,22 * * * jtask jd_redrain_half now')
+                await asyncio.sleep(1)
+                await jdbot.delete_messages(chat_id, msg)
             else:
-                if V4:
-                    configs = read("list")
-                    for config in configs:
-                        if config.find("第五区域") != -1 and config.find("↑") != -1:
-                            end_line = configs.index(config)
-                            break
-                    configs.insert(end_line - 2, f'export {key}="{value}"\n')
-                    configs = ''.join(configs)
-                else:
-                    configs = read("str")
-                    configs += f'export {key}="{value}"\n'
-                change += f"新增 {activity} 环境变量成功\n{kv}\n\n"
-                msg = await jdbot.edit_message(msg, change)
-            write(configs)
-        if len(change) == 0:
-            await jdbot.edit_message(msg, f"目前配置中的 {activity} 环境变量无需改动")
-            return
-        if "jd_zdjr_activity" in event.message.text:
-            from ..diy.diy import smiek_jd_zdjr
-            await smiek_jd_zdjr()
-        elif "jd_joinTeam_activityId" in event.message.text:
-            from ..diy.diy import jd_joinTeam_activityId
-            await jd_joinTeam_activityId()
+                await jdbot.edit_message(msg, f"看到这行字,是有严重BUG!")
+        except ImportError:
+            pass
     except Exception as e:
         title = "【💥错误💥】"
         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
@@ -226,234 +148,70 @@ async def activityID(event):
         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
         logger.error(f"错误--->{str(e)}")
 
+#bot发送/chart n 查询京豆收入
+@client.on(events.NewMessage(from_users=chat_id, pattern=r"^-b\d*$|^-c\d*$"))
+async def beanchange(event):
+    """
+    京豆收支变化
+    """
+    try:
+        message = event.message.text
+        if re.search(r"\d", message):
+            num = re.findall("\d+", message)[0]
+        else:
+            num = 1
+        if "b" in message:
+            cmdline = f"/bean {num}"
+            beanimg = JD_DIR + '/log/bean.jpg'
+        else:
+            cmdline = f"/chart {num}"
+            beanimg = JD_DIR + '/log/bot/bean.jpeg'
+        if event.chat_id != bot_id:
+            msg = await client.edit_message(event.chat_id, event.message.id, "正在查询，请稍后")
+            await client.send_message(bot_id, cmdline)
+            await asyncio.sleep(7)
+            await client.delete_messages(event.chat_id, msg)
+            await client.send_message(event.chat_id, f'您的账号{num}收支情况', file=beanimg)
+        else:
+            await client.delete_messages(event.chat_id, event.message.id)
+            await client.send_message(bot_id, cmdline)
+    except Exception as e:
+        title = "【💥错误💥】"
+        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
+        function = "函数名：" + sys._getframe().f_code.co_name
+        tip = '建议百度/谷歌进行查询'
+        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
+        logger.error(f"错误--->{str(e)}")
 
-# @client.on(events.NewMessage(chats=-1001235868507, from_users=107550100, pattern=r'.*JD_Diy:master:.*'))
-# async def upbot(event):
-#     try:
-#         with open(f"{JD_DIR}/jbot/diy/upbot.py", "r", encoding="utf-8") as f1:
-#             text = f1.read()
-#         if "【前瞻计划】" not in text:
-#             return
-#         await jdbot.send_message(chat_id, "【前瞻计划】\n检测到有更新，开始非覆盖式自动更新！")
-#         fpath = f"{JD_DIR}/diybot_beta.sh"
-#         if not os.path.exists(fpath):
-#             furl = "https://raw.githubusercontent.com/chiupam/JD_Diy/master/config/diybot_beta.sh"
-#             resp = requests.get(furl).text
-#             if not resp:
-#                 return
-#             with open(fpath, 'w+', encoding='utf-8') as f:
-#                 f.write(resp)
-#         os.system(f"bash {fpath}")
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
-
-
-# @client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\sjd_zdjr_activity(Url|Id)=(".*"|\'.*\')'))
-# async def myzdjr(event):
-#     try:
-#         msg = await jdbot.send_message(chat_id, '监控到 jd_zdjr_activity 环境变量')
-#         messages = event.message.text.split("\n")
-#         change = ''
-#         for message in messages:
-#             kv = message.replace("export ", "")
-#             key = kv.split("=")[0]
-#             value = re.findall(r'"([^"]*)"', kv)[0]
-#             if "Id" in key and len(value) != 32:
-#                 await jdbot.edit_message(msg, f"这是一趟灵车，不上车了\n\n{event.message.text}")
-#                 return
-#             with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f1:
-#                 configs = f1.read()
-#             if kv in configs:
-#                 continue
-#             if configs.find(key) != -1:
-#                 configs = re.sub(f'{key}=(\"|\').*(\"|\')', kv, configs)
-#                 change += f"替换 jd_zdjr_activity 环境变量成功\n{kv}\n\n"
-#                 msg = await jdbot.edit_message(msg, change)
-#             else:
-#                 if V4:
-#                     with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-#                         configs = f2.readlines()
-#                     for config in configs:
-#                         if config.find("第五区域") != -1 and config.find("↑") != -1:
-#                             end_line = configs.index(config)
-#                             break
-#                     configs.insert(end_line - 2, f'export {key}="{value}"\n')
-#                     configs = ''.join(configs)
-#                 else:
-#                     with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-#                         configs = f2.read()
-#                     configs += f'export {key}="{value}"\n'
-#                 change += f"新增 jd_zdjr_activity 环境变量成功\n{kv}\n\n"
-#                 msg = await jdbot.edit_message(msg, change)
-#             with open(f"{CONFIG_DIR}/config.sh", 'w', encoding='utf-8') as f3:
-#                 f3.write(configs)
-#         if len(change) == 0:
-#             await jdbot.edit_message(msg, "目前配置中的 jd_zdjr_activity 环境变量无需改动")
-#             return
-#         try:
-#             from ..diy.diy import smiek_jd_zdjr
-#             await smiek_jd_zdjr()
-#         except:
-#             None
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
-
-
-# @client.on(events.NewMessage(chats=myjoinTeam_chatIds, pattern=r"^export\sjd_joinTeam_activityId=\".*\"|.*='.*'"))
-# async def myjoinTeam(event):
-#     try:
-#         end = False
-#         env = event.message.text
-#         messages = env.split("\n")
-#         for message in messages:
-#             kv = message.replace("export ", "")
-#             key = kv.split("=")[0]
-#             value = re.findall(r'"([^"]*)"', kv)[0]
-#             with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f1:
-#                 configs = f1.read()
-#             if kv in configs:
-#                 continue
-#             if configs.find(key) != -1:
-#                 configs = re.sub(f'{key}=(\"|\').*(\"|\')', kv, configs)
-#                 end = f"替换 jd_joinTeam_activityId 环境变量成功\n\n{env}"
-#             else:
-#                 if V4:
-#                     with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-#                         configs = f2.readlines()
-#                     for config in configs:
-#                         if config.find("第五区域") != -1 and config.find("↑") != -1:
-#                             end_line = configs.index(config)
-#                             break
-#                     configs.insert(end_line - 2, f'export {key}="{value}"\n')
-#                     configs = ''.join(configs)
-#                 else:
-#                     with open(f"{CONFIG_DIR}/config.sh", 'r', encoding='utf-8') as f2:
-#                         configs = f2.read()
-#                     configs += f'export {key}="{value}"\n'
-#                 end = f"新增 jd_joinTeam_activityId 环境变量成功\n\n{env}"
-#             with open(f"{CONFIG_DIR}/config.sh", 'w', encoding='utf-8') as f3:
-#                 f3.write(configs)
-#         if end:
-#             await jdbot.send_message(chat_id, end)
-#         try:
-#             from ..diy.diy import jd_joinTeam_activityId
-#             await jd_joinTeam_activityId()
-#         except:
-#             None
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
-
-
-# # -100123456789 是频道的id，例如我需要把频道1的消息转发给机器人，则下一行的相应位置中填写频道1的id
-# @client.on(events.NewMessage(chats=-100123456789))
-# async def myforward(event):
-#     try:
-#         # -100123456789 是频道的id，例如我需要把频道1的消息转发给机器人，则下一行的相应位置中填写频道1的id
-#         await client.forward_messages(bot_id, event.id, -100123456789)
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
-
-
-# @client.on(events.NewMessage(chats=[-1001431256850, my_chat_id], from_users=1185488678))
-# async def myupuser(event):
-#     """
-#     关注频道：https://t.me/jd_diy_bot_channel
-#     """
-#     try:
-#         if event.message.file:
-#             fname = event.message.file.name
-#             try:
-#                 if fname.endswith("bot-06-21.py") or fname.endswith("user.py"):
-#                     path = f'{BOT_DIR}/diy/{fname}'
-#                     backfile(path)
-#                     await client.download_file(input_location=event.message, file=path)
-#                     from ..diy.bot import restart
-#                     await restart()
-#             except:
-#                 return
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
-
-
-# @client.on(events.NewMessage(chats=[-1001197524983, my_chat_id], pattern=r'.*店'))
-# async def shopbean(event):
-#     cookies = get_cks(CONFIG_SH_FILE)[0]
-#     message = event.message.text
-#     url = re.findall(re.compile(r"[(](https://api\.m\.jd\.com.*?)[)]", re.S), message)
-#     if url != [] and len(cookies) > 0:
-#         i = 0
-#         info = '关注店铺\n' + message.split("\n")[0] + "\n"
-#         for cookie in cookies:
-#             try:
-#                 i += 1
-#                 info += getbean(i, cookie, url[0])
-#             except:
-#                 continue
-#         await jdbot.send_message(chat_id, info)
-
-
-# @client.on(events.NewMessage(chats=[-1001419355450, my_chat_id], pattern=r"^#开卡"))
-# async def myzoo(event):
-#     """
-#     动物园开卡
-#     关注频道：https://t.me/zoo_channel
-#     """
-#     try:
-#         messages = event.message.text
-#         url = re.findall(re.compile(r"[(](https://raw\.githubusercontent\.com.*?)[)]", re.S), messages)
-#         if url == []:
-#             return
-#         else:
-#             url = url[0]
-#         speeds = ["http://ghproxy.com/", "https://mirror.ghproxy.com/", ""]
-#         for speed in speeds:
-#             resp = requests.get(f"{speed}{url}").text
-#             if resp:
-#                 break
-#         if resp:
-#             fname = url.split('/')[-1]
-#             fpath = f"{_ScriptsDir}/{fname}"
-#             backfile(fpath)
-#             with open(fpath, 'w+', encoding='utf-8') as f:
-#                 f.write(resp)
-#             with open(f"{CONFIG_DIR}/diybotset.json", 'r', encoding='utf-8') as f:
-#                 diybotset = json.load(f)
-#             run = diybotset['zoo_opencard']
-#             if run == "False":
-#                 await jdbot.send_message(chat_id, f"开卡脚本将保存到{_ScriptsDir}目录\n自动运行请在config目录diybotset.json中设置为Ture")
-#             else:
-#                 cmdtext = f'{jdcmd} {fpath} now'
-#                 await jdbot.send_message(chat_id, f"开卡脚本将保存到{_ScriptsDir}目录\n不自动运行请在config目录diybotset.json中设置为False")
-#                 await cmd(cmdtext)
-#     except Exception as e:
-#         title = "【💥错误💥】"
-#         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-#         function = "函数名：" + sys._getframe().f_code.co_name
-#         tip = '建议百度/谷歌进行查询'
-#         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-#         logger.error(f"错误--->{str(e)}")
+#回复一个消息，查询群组，频道，消息id
+@client.on(events.NewMessage(pattern=r'^id$', outgoing=True))
+async def check_id(event):
+    message = await event.get_reply_message()
+    text = f"此消息ID：`{str(event.message.id)}`\n\n"
+    text += f"**群组信息**\nid:`{str(event.chat_id)}\n`"
+    msg_from = event.chat if event.chat else (await event.get_chat())
+    if event.is_group or event.is_channel:
+        text += f"群组名称：`{msg_from.title}`\n"
+        try:
+            if msg_from.username:
+                text += f"群组用户名：`@{msg_from.username}`\n"
+        except AttributeError:
+            return
+    if message:
+        text += f"\n**查询的消息**：\n消息id：`{str(message.id)}`\n用户id：`{str(message.sender_id)}`"
+        try:
+            if message.sender.bot:
+                text += f"\n机器人：`是`"
+            if message.sender.last_name:
+                text += f"\n姓：`{message.sender.last_name}`"
+            try:
+                text += f"\n名：`{message.sender.first_name}`"
+            except TypeError:
+                pass
+            if message.sender.username:
+                text += f"\n用户名：@{message.sender.username}"
+        except AttributeError:
+            pass
+        await event.edit(text)
+    else:
+        await event.delete()
