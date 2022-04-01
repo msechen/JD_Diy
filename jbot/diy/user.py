@@ -35,7 +35,7 @@ async def user(event):
         logger.error(f"错误--->{str(e)}")
 
 
-@client.on(events.NewMessage(chats=[-1001728533280, bot_id, myzdjr_chatIds], pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare).*=(".*"|\'.*\')'))
+@client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare).*=(".*"|\'.*\')'))
 async def activityID(event):
     try:
         text = event.message.text
