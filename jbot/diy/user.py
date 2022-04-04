@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -8,8 +8,11 @@ import os
 import re
 import sys
 import time
-
+import json
+from unittest import result
+import requests
 from telethon import events, TelegramClient
+
 
 from .. import chat_id, jdbot, logger, API_ID, API_HASH, PROXY_START, proxy, JD_DIR, TOKEN
 from ..bot.utils import cmd, V4, QL, CONFIG_SH_FILE, get_cks, AUTH_FILE
@@ -18,7 +21,6 @@ from ..diy.utils import getbean, rwcon, my_chat_id, myzdjr_chatIds, shoptokenIds
 bot_id = int(TOKEN.split(":")[0])
 
 client = TelegramClient("user", API_ID, API_HASH, proxy=proxy, connection_retries=None).start() if PROXY_START else TelegramClient("user", API_ID, API_HASH, connection_retries=None).start()
-
 
 @client.on(events.NewMessage(chats=[bot_id, my_chat_id], from_users=chat_id, pattern=r"^user(\?|\？)$"))
 async def user(event):
