@@ -6,6 +6,8 @@
 
 已知bug:/bean n 查询功能无法使用
 
+该版本不支持青龙用户，建议关注青龙专用bot https://github.com/ccwav/QL_DIYBOT
+
 ## 目录
 - [目录](#目录)
 - [仓库目录说明](#仓库目录说明)
