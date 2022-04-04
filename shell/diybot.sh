@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-if [ -d "/jd" ]; then
+#if [ -d "/jd" ]; then
   root=/jd
-else
-  root=/ql
-fi
+#else
+#  root=/ql
+#fi
 
 #rm -rf $root/own/raw/
 #git clone https://github.com/msechen/jdrain.git $root/own/raw
