@@ -6,12 +6,12 @@ else
   root=/ql
 fi
 
-rm -rf $root/own/raw/
-git clone https://github.com/msechen/jdrain.git $root/own/raw
-cp -f $root/own/raw/jdCookie.js $root/scripts
-cp -f $root/own/raw/sendNotify.js $root/scripts
-cp -f $root/own/raw/USER_AGENTS.js $root/scripts
-cp -f $root/own/raw/magic.js $root/scripts
+#rm -rf $root/own/raw/
+#git clone https://github.com/msechen/jdrain.git $root/own/raw
+#cp -f $root/own/raw/jdCookie.js $root/scripts
+#cp -f $root/own/raw/sendNotify.js $root/scripts
+#cp -f $root/own/raw/USER_AGENTS.js $root/scripts
+#cp -f $root/own/raw/magic.js $root/scripts
 
 diybot_url="https://github.com/msechen/JD_Diy.git"
 jbot_botset=$root/config/bot.json
