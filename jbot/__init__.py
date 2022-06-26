@@ -59,7 +59,7 @@ elif PROXY_TYPE == "MTProxy":
     proxy = (BOT['proxy_add'], BOT['proxy_port'], BOT['proxy_secret'])
 else:
     proxy = (BOT['proxy_type'], BOT['proxy_add'], BOT['proxy_port'])
-# 开启tg对话
+# 开启jdbot tg对话
 if PROXY_START and BOT.get('noretry') and BOT['noretry']:
     jdbot = TelegramClient('bot', API_ID, API_HASH, connection=connectionType,
                            proxy=proxy).start(bot_token=TOKEN)
@@ -71,3 +71,16 @@ elif BOT.get('noretry') and BOT['noretry']:
 else:
     jdbot = TelegramClient('bot', API_ID, API_HASH,
                            auto_reconnect=True, retry_delay=1, connection_retries=99999).start(bot_token=TOKEN)
+
+# 开启user tg对话
+if PROXY_START and BOT.get('noretry') and BOT['noretry']:
+    user = TelegramClient(f'{CONFIG_DIR}/user', API_ID, API_HASH, connection=connectionType,
+                           proxy=proxy)
+elif PROXY_START:
+    user = TelegramClient(f'{CONFIG_DIR}/user', API_ID, API_HASH, connection=connectionType,
+                           proxy=proxy, connection_retries=None)
+elif BOT.get('noretry') and BOT['noretry']:
+    user = TelegramClient(f'{CONFIG_DIR}/user', API_ID, API_HASH)
+else:
+    user = TelegramClient(f'{CONFIG_DIR}/user', API_ID, API_HASH,
+                           connection_retries=None)
