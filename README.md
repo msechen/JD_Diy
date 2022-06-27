@@ -86,7 +86,7 @@ if [ -d "/jd" ]; then root=/jd; else root=/ql; fi
 mkdir $root/repo/backup/$(date +\%Y\%m\%d)
 cp -rf $root/jbot/* $root/repo/backup/$(date +\%Y\%m\%d)
 rm -rf $root/jbot/*
-wget https://cdn.jsdelivr.net/gh/dragon-tang/JD_Diy@master/shell/bot.sh -O $root/bot.sh
+wget https://raw.githubusercontent.com/msechen/JD_Diy/main/shell/bot.sh -O $root/bot.sh
 bash $root/bot.sh
 ```
 ## 开启user监控机器人
@@ -107,7 +107,7 @@ if [ -d "/jd" ]; then root=/jd; else root=/ql; fi
 mkdir $root/repo/backup/$(date +\%Y\%m\%d)
 cp -rf $root/jbot/* $root/repo/backup/$(date +\%Y\%m\%d)
 rm -rf $root/jbot/*
-wget https://cdn.jsdelivr.net/gh/dragon-tang/JD_Diy@master/shell/bot_beta.sh -O $root/bot.sh
+wget https://raw.githubusercontent.com/msechen/JD_Diy/main/shell/bot_beta.sh -O $root/bot.sh
 bash $root/bot.sh
 ```
 # 已知问题
