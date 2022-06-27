@@ -5,7 +5,7 @@ from .utils import cmd, TASK_CMD
 
 @jdbot.on(events.NewMessage(from_users=chat_id, pattern='/node'))
 async def bot_node(event):
-    '''接收/node命令后执行程序'''
+    """接收/node命令后执行程序"""
     msg_text = event.raw_text.split(' ')
     if isinstance(msg_text,list) and len(msg_text) == 2:
         text = ''.join(msg_text[1:])

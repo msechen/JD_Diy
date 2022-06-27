@@ -18,11 +18,13 @@ async def my_cron(event):
             with open(AUTH_FILE, 'r', encoding='utf-8') as f:
                 auth = json.load(f)
             buttons = [{'name': '运行', 'data': 'run'}, {'name': '日志', 'data': 'log'}, {'name': '编辑', 'data': 'edit'}, {
-                'name': '启用', 'data': 'enable'}, {'name': '禁用', 'data': 'disable'}, {'name': '删除', 'data': 'del'}, {'name': '取消', 'data': 'cancel'}, {'name': '上级', 'data': 'up'}]
+                'name': '启用', 'data': 'enable'}, {'name': '禁用', 'data': 'disable'}, {'name': '删除', 'data': 'del'},
+                       {'name': '取消', 'data': 'cancel'}, {'name': '上级', 'data': 'up'}]
         else:
             auth = {'token': ''}
             buttons = [{'name': '运行', 'data': 'run'}, {'name': '编辑', 'data': 'edit'}, {
-                'name': '启用', 'data': 'enable'}, {'name': '禁用', 'data': 'disable'}, {'name': '删除', 'data': 'del'}, {'name': '取消', 'data': 'cancel'}, {'name': '上级', 'data': 'up'}]
+                'name': '启用', 'data': 'enable'}, {'name': '禁用', 'data': 'disable'}, {'name': '删除', 'data': 'del'},
+                       {'name': '取消', 'data': 'cancel'}, {'name': '上级', 'data': 'up'}]
         if isinstance(msg_text, list) and len(msg_text) == 2:
             text = msg_text[-1]
         else:
@@ -43,7 +45,7 @@ async def my_cron(event):
                             i['name'], data=str(res['data'].index(i))) for i in res['data']]
                     else:
                         markup = [Button.inline(i, data=res['data'][i])
-                                    for i in res['data']]
+                                  for i in res['data']]
                     markup = split_list(markup, int(BOT_SET['每页列数']))
                     markup.append([Button.inline('取消', data='cancel')])
                     msg = await jdbot.send_message(
@@ -59,11 +61,11 @@ async def my_cron(event):
                         cron_info = '名称：\n\t{name}\n任务：\n\t{command}\n定时：\n\t{schedule}\n是否已禁用：\n\t{isDisabled}\n\t0--表示启用，1--表示禁用'.format(
                             **res['data'][int(resp)])
                         markup = [Button.inline(i['name'], data=i['data'])
-                                    for i in buttons]
+                                  for i in buttons]
                     else:
                         cron_info = f'{resp}'
                         markup = [Button.inline(i['name'], data=i['data'])
-                                    for i in buttons]
+                                  for i in buttons]
                     markup = split_list(markup, int(BOT_SET['每页列数']))
                     msg = await jdbot.edit_message(msg, cron_info, buttons=markup)
                     conv_data = await conv.wait_event(press_event(SENDER))
@@ -127,6 +129,7 @@ async def my_cron(event):
         msg = await jdbot.edit_message(msg, f'something wrong,I\'m sorry\n{str(e)}')
         logger.error(f'something wrong,I\'m sorry\n{str(e)}')
 
+
 if ch_name:
     jdbot.add_event_handler(my_cron, events.NewMessage(
         from_users=chat_id, pattern=BOT_SET['命令别名']['cron']))
@@ -177,6 +180,8 @@ async def my_addcron(event):
     except Exception as e:
         msg = await jdbot.edit_message(msg, f'something wrong,I\'m sorry\n{str(e)}')
         logger.error(f'something wrong,I\'m sorry\n{str(e)}')
+
+
 if ch_name:
     jdbot.add_event_handler(my_addcron, events.NewMessage(
         from_users=chat_id, pattern=BOT_SET['命令别名']['addcron']))
