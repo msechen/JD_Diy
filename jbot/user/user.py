@@ -21,7 +21,7 @@ client = user
 @client.on(events.NewMessage(chats=[bot_id, my_chat_id], from_users=chat_id, pattern=r"^user(\?|\？)$"))
 async def user(event):
     try:
-        msg = await jdbot.send_message(chat_id, r'`user.py`监控已正常启动！')
+        msg = await jdbot.send_message(chat_id, r'*24小时待命，请指示!')
         await asyncio.sleep(5)
         await jdbot.delete_messages(chat_id, msg)
     except Exception as e:
