@@ -6,7 +6,7 @@ from .utils import press_event, backup_file, add_cron, cmd, DIY_DIR, TASK_CMD, V
 
 @jdbot.on(events.NewMessage(from_users=chat_id))
 async def bot_get_file(event):
-    """定义文件操作"""
+    '''定义文件操作'''
     try:
         v4btn = [[Button.inline('放入config', data=CONFIG_DIR), Button.inline('放入scripts', data=SCRIPTS_DIR), Button.inline('放入OWN文件夹', data=DIY_DIR)], [
             Button.inline('放入scripts并运行', data='node1'), Button.inline('放入OWN并运行', data='node'), Button.inline('取消', data='cancel')]]
@@ -14,6 +14,7 @@ async def bot_get_file(event):
             Button.inline('放入scripts并运行', data='node1'), Button.inline('取消', data='cancel')]]
         SENDER = event.sender_id
         if event.message.file:
+            markup = []
             filename = event.message.file.name
             cmdtext = None
             async with jdbot.conversation(SENDER, timeout=180) as conv:

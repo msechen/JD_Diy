@@ -1,14 +1,12 @@
+from telethon import events
+from .. import LOG_DIR, jdbot, chat_id, LOG_DIR, JD_DIR, BOT_SET, ch_name
+from .utils import log_btn
 import os
 
-from telethon import events
 
-from .utils import log_btn
-from .. import jdbot, chat_id, LOG_DIR, JD_DIR, BOT_SET, ch_name
-
-
-@jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/log$'))
+@jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/log'))
 async def bot_log(event):
-    """定义日志文件操作"""
+    '''定义日志文件操作'''
     SENDER = event.sender_id
     path = LOG_DIR
     page = 0
@@ -18,10 +16,15 @@ async def bot_log(event):
         while path:
             path, msg, page, filelist = await log_btn(conv, SENDER, path, msg, page, filelist)
 
+@jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/botlog'))
+async def bot_run_log(event):
+    '''定义日志文件操作'''
+    await jdbot.send_message(chat_id,'bot运行日志',file=f'{LOG_DIR}/bot/run.log')
+
 
 @jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/getfile'))
 async def bot_getfile(event):
-    """定义获取文件命令"""
+    '''定义获取文件命令'''
     SENDER = event.sender_id
     path = JD_DIR
     page = 0
@@ -45,7 +48,6 @@ async def bot_getfile(event):
         msg = await conv.send_message('正在查询，请稍后')
         while path:
             path, msg, page, filelist = await log_btn(conv, SENDER, path, msg, page, filelist)
-
 
 if ch_name:
     jdbot.add_event_handler(bot_getfile, events.NewMessage(

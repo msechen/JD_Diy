@@ -22,13 +22,13 @@ async def listener(event):
         user_id = event.sender_id
         group = event.chat.title
         username = str(event.sender.username if event.sender.username else "未设置")
-        first_name = str(event.sender.first_name if event.sender.first_name else "")
-        last_name = str(event.sender.last_name if event.sender.last_name else "")
-        name = first_name + last_name
+        # first_name = str(event.sender.first_name if event.sender.first_name else "")
+        # last_name = str(event.sender.last_name if event.sender.last_name else "")
+        name = ""
         message = "; ".join(event.message.text.split("\n"))
         now = time.strftime("%H:%M:%S", time.localtime())
         today = time.strftime("%m-%d", time.localtime())
-        log = f"[{now}] 用户ID:[{user_id}] 用户名:[{username}] 昵称:[{name}] 消息:{message}\n"
+        log = f"[{now}] 用户ID:[{user_id}] 用户名:[{username}] 昵称:[{name}] 消息:{message}\n"        
         try:
             with open(f"{LOG_DIR}/listener/{group}-{today}.log", "a", encoding="utf-8") as f:
                 f.write(log)

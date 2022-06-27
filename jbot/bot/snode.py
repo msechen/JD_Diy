@@ -5,7 +5,7 @@ from .utils import cmd, snode_btn
 
 @jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/snode'))
 async def my_snode(event):
-    """定义supernode文件命令"""
+    '''定义supernode文件命令'''
     SENDER = event.sender_id
     path = JD_DIR
     page = 0

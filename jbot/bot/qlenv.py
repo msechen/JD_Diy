@@ -8,7 +8,7 @@ from ..bot.utils import QL, press_event,env_manage_QL, split_list, AUTH_FILE
 
 @jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/env'))
 async def bot_env_ql(event):
-    """接收/env后执行程序"""
+    '''接收/env后执行程序'''
     msg_text = event.raw_text.split(' ')
     try:
         SENDER = event.sender_id
