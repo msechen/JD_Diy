@@ -6,8 +6,8 @@
 """
 
 
-from .. import chat_id, jdbot, logger, api_id, api_hash, proxystart, proxy, _ConfigDir, _ScriptsDir, _OwnDir, _JdbotDir, _DiyScripts, _LogDir, _shortcut, _botlog, _botjson, img_file, _botset, _set, chname, TOKEN, StartCMD, proxyType, connectionType
-from ..bot.utils import row, _CronFile, bean_log, _ConfigFile, V4, QL, _DiyDir, jdcmd, myck, split_list, backfile, press_event, cmd, getname, logbtn, logbtn, mycron, mycron, upcron, upcron, upcron, upcron, cronmanger, cronmanger
+from .. import chat_id, jdbot, logger, API_ID, API_HASH, PROXY_START, proxy, CONFIG_DIR, SCRIPTS_DIR, OWN_DIR, BOT_DIR, _DiyScripts, LOG_DIR, SHORTCUT_FILE, BOT_LOG_FILE, BOT_JSON_FILE, QR_IMG_FILE, BOT_SET_JSON_FILE_USER, BOT_SET_JSON_FILE, ch_name, TOKEN, START_CMD, PROXY_TYPE, connectionType
+from ..bot.utils import row, CRON_FILE, BEAN_LOG_DIR, CONFIG_SH_FILE, V4, QL, DIY_DIR, TASK_CMD, get_cks, split_list, backup_file, press_event, cmd, get_ch_names, log_btn, snode_btn, mycron, mycron, add_cron_V4, add_cron, cron_manage_QL, cron_manage_V4, cron_manage, env_manage_QL
 from telethon import events, Button
 from asyncio import exceptions
 
@@ -90,6 +90,42 @@ async def getcookie(jd_cookie):
 
 
 async def signCollectGift():
+    try:
+        """
+        try 部分则自由发挥即可
+        """
+
+
+
+
+
+
+
+
+    except Exception as e:
+        await jdbot.send_message(chat_id, 'something wrong,I\'m sorry\n' + str(e))
+        logger.error('something wrong,I\'m sorry\n' + str(e))
+
+
+async def rush_lzclient():
+    try:
+        """
+        try 部分则自由发挥即可
+        """
+
+
+
+
+
+
+
+
+    except Exception as e:
+        await jdbot.send_message(chat_id, 'something wrong,I\'m sorry\n' + str(e))
+        logger.error('something wrong,I\'m sorry\n' + str(e))
+
+
+async def gua_addCart():
     try:
         """
         try 部分则自由发挥即可

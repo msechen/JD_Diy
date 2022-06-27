@@ -53,16 +53,18 @@ async def bot_set_init():
                             bot_set[i][j] = user_set[i][j]
                     else:
                         continue
+                with open(BOT_SET_JSON_FILE_USER, 'w+', encoding='utf-8') as f:
+                    json.dump(bot_set, f)
+        else:
+            with open(BOT_SET_JSON_FILE_USER, 'w+', encoding='utf-8') as f:
+                json.dump(bot_set, f)
     except Exception as e:
         logger.info(str(e))
-    finally:
-        with open(BOT_SET_JSON_FILE_USER, 'w+', encoding='utf-8') as f:
-            json.dump(bot_set, f)
 
 
 async def hello():
     if BOT_SET.get('启动问候') and BOT_SET['启动问候'].lower() == 'true':
-        info = '原机器人\t-->\t[项目地址](https://github.com/SuMaiKaDe/) \t| \t[交流频道](https://t.me/tiangongtong) \ndiy机器人\t-->\t[项目地址](https://github.com/chiupam/JD_Diy) \t| \t[通知频道](https://t.me/JD_Diy_Channel)'
+        info = '[项目地址](https://github.com/SuMaiKaDe/) \t| \t[交流频道](https://t.me/tiangongtong) '
         hello_words = BOT_SET["启动问候语"].split("|")
         hello_word = hello_words[random.randint(0, len(hello_words) - 1)]
         await jdbot.send_message(chat_id, f'{str(hello_word)}\n\n\t{info}', link_preview=False)
@@ -74,4 +76,3 @@ if __name__ == "__main__":
         jdbot.loop.create_task(bot_set_init())
         jdbot.loop.create_task(hello())
         jdbot.loop.run_forever()
-

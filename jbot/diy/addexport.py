@@ -21,6 +21,8 @@ async def myaddexport(event):
         SENDER = event.sender_id
         messages = event.raw_text.split("\n")
         for message in messages:
+            if "export " not in message:
+                continue
             kv = message.replace("export ", "")
             kname = kv.split("=")[0]
             vname = re.findall(r"(\".*\"|'.*')", kv)[0][1:-1]
