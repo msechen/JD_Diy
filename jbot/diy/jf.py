@@ -17,7 +17,7 @@ async def rebate_sku(event):
     messages = filter(None, messages)
     key="jf_convert_url"
     strReturn=""
-    homeurl=""
+    home=""
     imgurl=""
     for message in messages:
         if "u.jd.com" in message:
@@ -48,13 +48,13 @@ async def rebate_sku(event):
                         if "imgurl" in line:
                             imgurl =line.split('：')[1]
                         if "🏠" in line:
-                            homeurl =line
+                            home =line
                         if "💰" in line or "🚗" in line or "🐲" in line:
                             strReturn += line +'\n'
             except Exception as e:
                 print(e)
     if strReturn:
-        await jdbot.send_message(chat_id, strReturn+'\n'+homeurl, file=imgurl)
+        await jdbot.send_message(chat_id, strReturn+'\n'+home, file=imgurl)
     else:
         await jdbot.send_message(chat_id,'查询失败!')
 
