@@ -36,6 +36,7 @@ JD_Diy/                     # JD_Diy 仓库
   |-- other                     # 不便于分类脚本
   |-- pys                       # python脚本
   |-- shell                     # shell脚本
+  |-- scripts                   # 插件依赖脚本
   |-- requirements.txt          # 依赖文件
   `-- README.md                 # 仓库说明
 ```
