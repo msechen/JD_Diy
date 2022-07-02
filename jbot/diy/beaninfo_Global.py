@@ -1,11 +1,54 @@
 from telethon import events, Button
 from .user import client
 
-from .. import jdbot
+from .. import jdbot, logger, chat_id
 from ..bot.utils import cmd, TASK_CMD,split_list, press_event
 from ..diy.utils import read, write
 import asyncio
-import re
+import re, os
+
+@client.on(events.NewMessage(pattern=r'^setn', outgoing=True))
+async def SetBeanDetailInfo(event):
+    try:
+        msg_text= event.raw_text.split(' ')
+        if len(msg_text) == 2:
+            text = msg_text[-1]
+        else:
+            text = None
+            
+        if text==None:
+            await event.edit('请输入正确的格式: setbd 屏蔽京豆数量')
+            return    
+            
+        key="BOTShowTopNum"
+        kv=f'{key}="{text}"'
+        change=""
+        configs = read("str")    
+        if kv not in configs:
+            if key in configs:
+                configs = re.sub(f'{key}=("|\').*("|\')', kv, configs)                
+                write(configs)
+            else:
+                configs = read("str")
+                configs += f'export {key}="{text}"\n'                
+                write(configs)
+            change = f'已替换屏蔽京豆数为{text}' 
+        else:
+            change = f'设定没有改变,想好再来.' 
+            
+        await event.edit(change)
+        await asyncio.sleep(2)
+        await event.delete()
+        
+    except Exception as e:
+        title = "【💥错误💥】"
+        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
+        function = "函数名：" + e.__traceback__.tb_frame.f_code.co_name
+        details = "错误详情：第 " + str(e.__traceback__.tb_lineno) + " 行"
+        tip = '建议百度/谷歌进行查询'
+        #await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n{details}\n{traceback.format_exc()}\n{tip}")
+        logger.error(f"错误--->{str(e)}")
+
 @client.on(events.NewMessage(pattern=r'^bd', outgoing=True))
 async def CCBeanDetailInfo(event):
     msg_text= event.raw_text.split(' ')
@@ -16,6 +59,8 @@ async def CCBeanDetailInfo(event):
     
     if text==None:
         await event.edit('请指定要查询的账号,格式: bd 1 或 bd ptpin')
+        await asyncio.sleep(2)
+        await event.delete()
         return    
         
     key="BOTCHECKCODE"
@@ -55,8 +100,11 @@ async def CCBeanDetailInfo(event):
                     await client.send_message(event.chat_id, strReturn)
                     strReturn="" 
     else:
-        await client.send_message(event.chat_id,'查询失败!')
+        msg = await client.send_message(event.chat_id, '查询失败!')
+        await asyncio.sleep(4)
+        await client.delete_messages(event.chat_id, msg)
         
     if strReturn:        
-        await client.send_message(event.chat_id, strReturn)
-    
+        msg = await client.send_message(event.chat_id, strReturn)
+        await asyncio.sleep(4)
+        await client.delete_messages(event.chat_id, msg)
