@@ -22,12 +22,12 @@ bot_id = int(TOKEN.split(":")[0])
 
 client = TelegramClient("user", API_ID, API_HASH, proxy=proxy, connection_retries=None).start() if PROXY_START else TelegramClient("user", API_ID, API_HASH, connection_retries=None).start()
 
-@client.on(events.NewMessage(chats=[bot_id, my_chat_id], from_users=chat_id, pattern=r"^user(\?|\？)$"))
+@client.on(events.NewMessage(pattern=r"^user(\?|\？)$", outgoing=True))
 async def user(event):
     try:
-        msg = await jdbot.send_message(chat_id, r'`user.py`监控已正常启动！')
-        await asyncio.sleep(5)
-        await jdbot.delete_messages(chat_id, msg)
+        await event.edit(r'7*24小时全天候待命，请指示！')
+        await asyncio.sleep(2)
+        await event.delete()
     except Exception as e:
         title = "【💥错误💥】"
         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
