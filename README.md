@@ -9,7 +9,8 @@
 3、新增复读re全局插件，用法:选中一个消息回复re n,n为次数，非必填\
 4、新增查天气weather全局插件，用法：发送某地天气\
 5、新增京粉转链全局插件,用法：选中一个商品断链发送jf，延时稍微有点大\
-6、新增ccwav四大查询资产全局插件,cb,bc,bb,bd，js依赖脚本到 https://github.com/ccwav/QL_DIYBOT/tree/main/Script 拉库
+6、新增ccwav四大查询资产全局插件,用法：cb n,bc n,bb n,bd n，js依赖脚本到 https://github.com/ccwav/QL_DIYBOT/tree/main/Script 拉库\
+7、新增WALL_E全局京东口令解析插件，用法:选中一个京东口令消息回复jx
 
 ## 目录
 - [目录](#目录)
