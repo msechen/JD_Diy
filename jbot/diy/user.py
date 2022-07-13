@@ -40,41 +40,57 @@ async def user(event):
 @client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare|M_FOLLOW_SHOP_ARGV|M_WX_LUCK_DRAW_URL|M_WX_ADD_CART_URL).*=(".*"|\'.*\')'))
 async def activityID(event):
     try:
+        cmdtext=''
         text = event.message.text
         if "computer_activityId" in text:
             name = "电脑配件"
+            cmdtext='otask /jd/own/raw/jd_computer.js now'
         elif "comm_activityIDList" in text:
             name = "jdjoy_open通用ID任务"
+            cmdtext='otask /jd/own/raw/jd_joyjd_open.js now'
         elif "jd_mhurlList" in text:
             name = "盲盒任务抽京豆"
+            cmdtext='otask /jd/own/raw/jd_mhtask.js now'
         elif "jd_nzmhurl" in text:
             name = "女装盲盒抽京豆"
+            cmdtext='otask /jd/own/raw/jd_nzmh.js now'
         elif "wish_appIdArrList" in text:
             name = "许愿池抽奖机"
+            cmdtext='otask /jd/own/raw/jd_wish.js now'
         elif "jd_redrain_url" in text:
             name = "整点京豆雨"
         elif "jd_redrain_half_url" in text:
             name = "半点京豆雨"
         elif "M_WX_COLLECT_CARD_URL" in text:
             name = "集卡任务"
+            cmdtext='otask /jd/own/raw/m_jd_wx_collectCard.js now'
         elif "jd_cjhy_activityId" in text:
             name = "cj组队瓜分"
+            cmdtext='otask /jd/own/raw/jd_cjzdgf.js now'
         elif "jd_zdjr_activityId" in text:
             name = "lz组队瓜分"
+            cmdtext='otask /jd/own/raw/jd_zdjr.js now'
         elif "VENDER_ID" in text:
             name = "入会开卡领豆"
+            cmdtext='otask /jd/own/raw/jd_OpenCard_Force.js now'
         elif "WXGAME_ACT_ID" in text:
             name = "打豆豆游戏"
+            cmdtext='otask /jd/own/raw/jd_doudou.js now'
         elif "SHARE_ACTIVITY_ID" in text:
             name = "分享有礼"
+            cmdtext='otask /jd/own/raw/jd_share.js now'
         elif "welfare" in text:
             name = "联合关注+加购+分享领豆"
+            cmdtext='otask /jd/own/raw/fav_and_addcart.js now'
         elif "M_FOLLOW_SHOP_ARGV" in text:
             name = "M关注有礼"
+            cmdtext='otask /jd/own/raw/m_jd_follow_shop.js now'
         elif "M_WX_LUCK_DRAW_URL" in text:
             name = "M幸运抽奖"
+            cmdtext='otask /jd/own/raw/m_jd_wx_luckDraw.js now'
         elif "M_WX_ADD_CART_URL" in text:
             name = "M加购有礼"
+            cmdtext='otask /jd/own/raw/m_jd_wx_addCart.js now'
         else:
             return
         msg = await jdbot.send_message(chat_id, f'【监控】 监测到`{name}` 环境变量！')
@@ -113,35 +129,35 @@ async def activityID(event):
             return
         try:
             if "computer_activityId" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_computer.js now')
+                await cmd(cmdtext)
             elif "comm_activityIDList" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_joyjd_open.js now')
+                await cmd(cmdtext)
             elif "jd_mhurlList" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_mhtask.js now')
+                await cmd(cmdtext)
             elif "jd_nzmhurl" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_nzmh.js now')
+                await cmd(cmdtext)
             elif "wish_appIdArrList" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_wish.js now')
+                await cmd(cmdtext)
             elif "M_WX_COLLECT_CARD_URL" in event.message.text:
-                await cmd('otask /jd/own/raw/m_jd_wx_collectCard.js now')
+                await cmd(cmdtext)
             elif "jd_cjhy_activityId" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_cjzdgf.js now')
+                await cmd(cmdtext)
             elif "jd_zdjr_activityId" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_zdjr.js now')
+                await cmd(cmdtext)
             elif "VENDER_ID" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_OpenCard_Force.js now')
+                await cmd(cmdtext)
             elif "WXGAME_ACT_ID" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_doudou.js now')
+                await cmd(cmdtext)
             elif "SHARE_ACTIVITY_ID" in event.message.text:
-                await cmd('otask /jd/own/raw/jd_share.js now')
+                await cmd(cmdtext)
             elif "welfare" in event.message.text:
-                await cmd('otask /jd/own/raw/fav_and_addcart.js now')
+                await cmd(cmdtext)
             elif "M_FOLLOW_SHOP_ARGV" in event.message.text:
-                await cmd('otask /jd/own/raw/m_jd_follow_shop.js now')
+                await cmd(cmdtext)
             elif "M_WX_LUCK_DRAW_URL" in event.message.text:
-                await cmd('otask /jd/own/raw/m_jd_wx_luckDraw.js now')
+                await cmd(cmdtext)
             elif "M_WX_ADD_CART_URL" in event.message.text:
-                await cmd('otask /jd/own/raw/m_jd_wx_addCart.js now')
+                await cmd(cmdtext)
             elif "jd_redrain_url" in event.message.text:
                 msg = await jdbot.send_message(chat_id, r'`更换整点雨url完毕\n请定时任务0 0 * * * jtask jd_redrain now')
                 await asyncio.sleep(1)
@@ -154,41 +170,6 @@ async def activityID(event):
                 await jdbot.edit_message(msg, f"看到这行字,是有严重BUG!")
         except ImportError:
             pass
-    except Exception as e:
-        title = "【💥错误💥】"
-        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-        function = "函数名：" + sys._getframe().f_code.co_name
-        tip = '建议百度/谷歌进行查询'
-        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
-        logger.error(f"错误--->{str(e)}")
-
-#bot发送/chart n 查询京豆收入
-@client.on(events.NewMessage(from_users=chat_id, pattern=r"^-b\d*$|^-c\d*$"))
-async def beanchange(event):
-    """
-    京豆收支变化
-    """
-    try:
-        message = event.message.text
-        if re.search(r"\d", message):
-            num = re.findall("\d+", message)[0]
-        else:
-            num = 1
-        if "b" in message:
-            cmdline = f"/bean {num}"
-            beanimg = JD_DIR + '/log/bean.jpg'
-        else:
-            cmdline = f"/chart {num}"
-            beanimg = JD_DIR + '/log/bot/bean.jpeg'
-        if event.chat_id != bot_id:
-            msg = await client.edit_message(event.chat_id, event.message.id, "正在查询，请稍后")
-            await client.send_message(bot_id, cmdline)
-            await asyncio.sleep(7)
-            await client.delete_messages(event.chat_id, msg)
-            await client.send_message(event.chat_id, f'您的账号{num}收支情况', file=beanimg)
-        else:
-            await client.delete_messages(event.chat_id, event.message.id)
-            await client.send_message(bot_id, cmdline)
     except Exception as e:
         title = "【💥错误💥】"
         name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
