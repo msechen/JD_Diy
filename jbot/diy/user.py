@@ -36,7 +36,7 @@ async def user(event):
         await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n\n{tip}")
         logger.error(f"错误--->{str(e)}")
 
-
+#监控活动
 @client.on(events.NewMessage(chats=myzdjr_chatIds, pattern=r'export\s(computer_activityId|comm_activityIDList|jd_mhurlList|jd_nzmhurl|wish_appIdArrList|jd_redrain_half_url|jd_redrain_url|M_WX_COLLECT_CARD_URL|jd_cjhy_activityId|jd_zdjr_activityId|VENDER_ID|WXGAME_ACT_ID|SHARE_ACTIVITY_ID|welfare|M_FOLLOW_SHOP_ARGV|M_WX_LUCK_DRAW_URL|M_WX_ADD_CART_URL).*=(".*"|\'.*\')'))
 async def activityID(event):
     try:
