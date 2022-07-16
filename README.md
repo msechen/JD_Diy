@@ -12,6 +12,8 @@
 6、新增ccwav四大查询资产全局插件,用法：cb n,bc n,bb n,bd n，js依赖脚本到 https://github.com/ccwav/QL_DIYBOT/tree/main/Script 拉库\
 7、新增WALL_E全局京东口令解析插件，用法:选中一个京东口令消息回复jx
 
+/jbot/diy/user.py为监控通用模板，根据脚本库 https://github.com/msechen/jdrain 补充监控key和执行脚本路径
+
 ## 目录
 - [目录](#目录)
 - [仓库目录说明](#仓库目录说明)
