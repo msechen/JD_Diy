@@ -532,3 +532,13 @@ def env_manage_QL(fun, envdata, token):
         res = {'code': 400, 'data': str(e)}
     finally:
         return res
+    
+    
+def reContent_INVALID(text):
+    replaceArr = ['_', '*', '~']
+    for i in replaceArr:
+        t = ''
+        for a in range(5):
+            t += i
+        text = re.sub('\%s{6,}' % i, t, text)
+    return text
