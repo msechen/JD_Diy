@@ -101,10 +101,10 @@ async def CCBeanDetailInfo(event):
                     strReturn="" 
     else:
         msg = await client.send_message(event.chat_id, '查询失败!')
-        await asyncio.sleep(4)
+        await asyncio.sleep(10)
         await client.delete_messages(event.chat_id, msg)
         
     if strReturn:        
         msg = await client.send_message(event.chat_id, strReturn)
-        await asyncio.sleep(4)
+        await asyncio.sleep(10)
         await client.delete_messages(event.chat_id, msg)
