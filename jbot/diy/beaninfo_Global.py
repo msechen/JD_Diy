@@ -17,7 +17,7 @@ async def SetBeanDetailInfo(event):
             text = None
             
         if text==None:
-            await event.edit('请输入正确的格式: setbd 屏蔽京豆数量')
+            await event.edit('请输入正确的格式: setn 屏蔽京豆数量')
             return    
             
         key="BOTShowTopNum"
