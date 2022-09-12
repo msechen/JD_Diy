@@ -1,8 +1,8 @@
 from telethon import events, Button
 from .. import jdbot, chat_id, LOG_DIR, logger, BOT_SET, ch_name
 from ..bot.quickchart import QuickChart
-from .beandata import get_bean_data
-from .utils import V4,split_list, press_event
+from ..bot.beandata import get_bean_data
+from ..bot.utils import V4,split_list, press_event
 BEAN_IMG = f'{LOG_DIR}/bot/bean.jpeg'
 
 

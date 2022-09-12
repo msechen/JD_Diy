@@ -3,8 +3,8 @@ from telethon import events, Button
 from .. import LOG_DIR, jdbot, chat_id, BOT_SET, BOT_DIR, logger,  ch_name
 from prettytable import PrettyTable
 import subprocess
-from .beandata import get_bean_data
-from .utils import V4,split_list, press_event
+from ..bot.beandata import get_bean_data
+from ..bot.utils import V4,split_list, press_event
 
 BEAN_IN_FILE = f'{LOG_DIR}/bean_income.csv'
 BEAN_OUT_FILE = f'{LOG_DIR}/bean_outlay.csv'

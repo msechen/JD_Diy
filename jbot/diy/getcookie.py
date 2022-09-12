@@ -4,7 +4,7 @@ import re
 import time
 import qrcode
 from asyncio import exceptions
-from .. import jdbot, chat_id, img_file, mybot, chname
+from .. import jdbot, chat_id, QR_IMG_FILE, BOT_SET, ch_name
 from ..bot.utils import press_event
 
 cookiemsg = ''
@@ -106,7 +106,7 @@ def creatqr(text):
     # 生成二维码
     img = qr.make_image()
     # 保存二维码
-    img.save(img_file)
+    img.save(QR_IMG_FILE)
 
 
 @jdbot.on(events.NewMessage(from_users=chat_id, pattern=r'^/getcookie'))
@@ -125,7 +125,7 @@ async def my_cookie(event):
             markup = [Button.inline("已扫码", data='confirm'),
                       Button.inline("取消", data='cancel')]
             await jdbot.delete_messages(chat_id, msg)
-            cookiemsg = await jdbot.send_message(chat_id, '30s内点击取消将取消本次操作\n如不取消，扫码结果将于30s后显示\n扫码后不想等待点击已扫码', file=img_file, buttons=markup)
+            cookiemsg = await jdbot.send_message(chat_id, '30s内点击取消将取消本次操作\n如不取消，扫码结果将于30s后显示\n扫码后不想等待点击已扫码', file=QR_IMG_FILE, buttons=markup)
             convdata = await conv.wait_event(press_event(SENDER))
             res = bytes.decode(convdata.data)
             if res == 'cancel':
@@ -175,6 +175,6 @@ async def my_cookie(event):
     except Exception as e:
         await jdbot.send_message(chat_id, f'something wrong,I\'m sorry\n{str(e)}')
 
-if chname:
+if ch_name:
     jdbot.add_event_handler(my_cookie, events.NewMessage(
-        from_users=chat_id, pattern=mybot['命令别名']['getcookie']))
+        from_users=chat_id, pattern=BOT_SET['命令别名']['getcookie']))
