@@ -14,6 +14,8 @@
 
 /jbot/diy/user.py为监控通用模板，根据脚本库 https://github.com/msechen/jdrain 补充监控key和执行脚本路径
 
+有能力的建议你魔改，适配插件
+
 ## 目录
 - [目录](#目录)
 - [仓库目录说明](#仓库目录说明)
