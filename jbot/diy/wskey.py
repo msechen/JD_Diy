@@ -129,11 +129,30 @@ async def myaddwskey(event):
                 pt_pin = re.findall(r'pin=(.*);', pin)[0]
                 configs = wskey("str")
                 if pin + "wskey" in configs:
-                    configs = re.sub(f"{pin}wskey=.*;", message, configs)
-                    text += f"更新wskey成功！pin为：{pt_pin}\n"
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()                                     
+                    try:
+                        if res1['code']==200:
+                            new_cookie = res1['cookie']
+                            configs = re.sub(f'{pin}wskey=.*;', message, configs)
+                            if V4:
+                                subcookie(pin, new_cookie, True)
+                            else:
+                                subcookie(pin, new_cookie, False)
+                            text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f'你的的wskey貌似过期了！'
                 else:
-                    configs += message + "\n"
-                    text += f"新增wskey成功！pin为：{pt_pin}\n"
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()                          
+                    try:
+                        if res1['code']==200:
+                            new_cookie = res1['cookie']
+                            configs = read("str")
+                            configs += f"{message}\n"
+                            text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f"pin为{pin}的wskey貌似过期了！"                    
                 msg = await jdbot.edit_message(msg, text)
                 wskey(configs)
         elif V4 or QL2:
@@ -143,32 +162,36 @@ async def myaddwskey(event):
                 message = pin + key + ";"
                 pt_pin = re.findall(r'pin=(.*);', pin)[0]
                 configs = read("str")
-                url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
-                res1 = requests.get(url=url1, headers=header).json()                 
                 if pin + "wskey" in configs:
-                    if res1['code']==200:
-                        new_cookie = res1['cookie']
-                        configs = re.sub(f'{pin}wskey=.*;', message, configs)
-                        if V4:
-                            subcookie(pin, new_cookie, True)
-                        else:
-                            subcookie(pin, new_cookie, False)
-                        text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
-                    else:
-                        text += res1['notify']
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()                                     
+                    try:
+                        if res1['code']==200:
+                            new_cookie = res1['cookie']
+                            configs = re.sub(f'{pin}wskey=.*;', message, configs)
+                            if V4:
+                                subcookie(pin, new_cookie, True)
+                            else:
+                                subcookie(pin, new_cookie, False)
+                            text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f'你的的wskey貌似过期了！'
                 elif V4 and f"pt_pin={pt_pin}" in configs:
                     configs = read("list")
                     for config in configs:
                         if f"pt_pin={pt_pin}" in config:
-                            if res1['code']==200:
-                                new_cookie = res1['cookie']
-                                line = configs.index(config)
-                                num = re.findall(r'(?<=[Cc]ookie)[\d]+(?==")', config)[0]
-                                configs.insert(line, f'wskey{str(num)}="{message}"\n')
-                                configs.insert(line, f'Cookie{str(num)}="{new_cookie};"\n')
-                                text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
-                            else:
-                                text += res1['notify']
+                            url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                            res1 = requests.get(url=url1, headers=header).json()   
+                            try: 
+                                if res1['code']==200:
+                                    new_cookie = res1['cookie']
+                                    line = configs.index(config)
+                                    num = re.findall(r'(?<=[Cc]ookie)[\d]+(?==")', config)[0]
+                                    configs.insert(line, f'wskey{str(num)}="{message}"\n')
+                                    configs.insert(line, f'Cookie{str(num)}="{new_cookie};"\n')
+                                    text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
+                            except:
+                                text += f'你的的wskey貌似过期了！'
                             break
                         elif "第二区域" in config:
                             await jdbot.send_message(chat_id, "请使用标准模板！")
@@ -181,29 +204,33 @@ async def myaddwskey(event):
                             num = int(re.findall(r'(?<=[Cc]ookie)[\d]+(?==")', config)[0]) + 1
                         elif "第二区域" in config:
                             break
-                    if res1['code']==200:
-                        new_cookie = res1['cookie']
-                        configs.insert(line, f'Cookie{str(num)}="{new_cookie};"\n')
-                        configs.insert(line, f'wskey{str(num)}="{message}"\n')
-                        text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
-                    else:
-                        text += f"{res1['notify']}"
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()                                     
+                    try:
+                        if res1['code']==200:
+                            new_cookie = res1['cookie']
+                            configs.insert(line, f'Cookie{str(num)}="{new_cookie};"\n')
+                            configs.insert(line, f'wskey{str(num)}="{message}"\n')
+                            text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f"pin为{pin}的wskey貌似过期了！"
                 else:
-                    if res1['code']==200:
-                        new_cookie = res1['cookie']
-                        configs = read("str")
-                        configs += f"{message}\n"
-                        text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
-                    else:
-                        text += f"{res1['notify']}"
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()                          
+                    try:
+                        if res1['code']==200:
+                            new_cookie = res1['cookie']
+                            configs = read("str")
+                            configs += f"{message}\n"
+                            text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f"pin为{pin}的wskey貌似过期了！"
                 msg = await jdbot.edit_message(msg, text)
                 write(configs)
         else:
             token = ql_token(AUTH_FILE)
             url = 'http://127.0.0.1:5700/api/envs'
             headers = {'Authorization': f'Bearer {token}'}
-            url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
-            res1 = requests.get(url=url1, headers=header).json()                
             for message in messages:
                 ws = re.findall(r'(pin=.*)(wskey=[^;]*);*', message)[0]
                 pin, key = ws[0], ws[1]
@@ -212,23 +239,29 @@ async def myaddwskey(event):
                 body = {'searchValue': pin + "wskey="}
                 data = get(url, headers=headers, params=body).json()['data']
                 if data:
-                    if res1['code']==200:
-                        body = {"value": message, "name": "JD_WSCK", "_id": data[0]['_id']}
-                        put(url, headers=headers, json=body)
-                        subcookie(pin, new_cookie, False)
-                        text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
-                    else:
-                        text += f"{res1['notify']}"                    
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()   
+                    try:   
+                        if res1['code']==200:
+                            body = {"value": message, "name": "JD_WSCK", "_id": data[0]['_id']}
+                            put(url, headers=headers, json=body)
+                            subcookie(pin, new_cookie, False)
+                            text += f"更新wskey成功！pin为：{pt_pin}\n更新cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f"pin为{pin}的wskey貌似过期了！"                    
                 else:
-                    if res1['code']==200:
-                        body = [{"name": "JD_WSCK", "value": message}]
-                        code = post(url, json=body, headers=headers).json()['code']
-                        if code == 500:
-                            post(url, headers=headers, json=body[0])
-                        subcookie(pin, new_cookie, False)
-                        text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
-                    else:
-                        text += f"{res1['notify']}"                                
+                    url1=f'http://api.jdauto.cf/api/w2appck?userid={str(pin.split("=")[1].split(";")[0])}&key={message}'
+                    res1 = requests.get(url=url1, headers=header).json()   
+                    try:  
+                        if res1['code']==200:
+                            body = [{"name": "JD_WSCK", "value": message}]
+                            code = post(url, json=body, headers=headers).json()['code']
+                            if code == 500:
+                                post(url, headers=headers, json=body[0])
+                            subcookie(pin, new_cookie, False)
+                            text += f"新增wskey成功！pin为：{pt_pin} \n新增cookie成功！pt_pin：{pt_pin}\n"
+                    except:
+                        text += f"pin为{pin}的wskey貌似过期了！"                                
                 msg = await jdbot.edit_message(msg, text)
 
     except Exception as e:
