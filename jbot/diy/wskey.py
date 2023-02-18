@@ -270,4 +270,4 @@ async def myaddwskey(event):
         function = "函数名：" + sys._getframe().f_code.co_name
         tip = '建议百度/谷歌进行查询'
         await jdbot.send_message(chat_id, f"pin为{pin}的wskey貌似过期了！")
-        logger.error(f"错误--->{str(e)}")
+
