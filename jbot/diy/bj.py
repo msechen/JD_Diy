@@ -4,7 +4,7 @@ from ..bot.utils import get_cks
 from .. import chat_id, jdbot, logger, API_ID, API_HASH, PROXY_START, proxy, JD_DIR, TOKEN
 from urllib import parse
 import asyncio
-from .user import client
+from .user import client #用user监控的，此行改成from .login import user
 
 
 #私聊狗哥https://t.me/wogouge获取token
