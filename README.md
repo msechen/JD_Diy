@@ -8,10 +8,9 @@
 2、新增删除del全局插件，用法：任意地方删除自身消息发送d n,n为次数，必填\
 3、新增复读re全局插件，用法:选中一个消息回复re n,n为次数，非必填\
 4、新增查天气weather全局插件，用法：发送 某地天气\
-5、新增京粉转链全局插件,用法：选中一个商品断链发送jf，延时稍微有点大\
-6、新增ccwav四大查询资产全局插件,用法：cb n,bc n,bb n,bd n，js依赖脚本到 [QL_DIYBOT](https://github.com/ccwav/QL_DIYBOT/tree/main/Script) 仓库 拉库\
-7、新增WALL_E全局京东口令解析插件，用法:选中一个京东口令消息回复jx
-8、新增京东、淘宝历史比价插件(适配pkc,下载[bj_pkc插件](https://raw.githubusercontent.com/msechen/JD_Diy/main/pkc/user/bj_pkc.py))，用法：选中一个京东链接、淘宝链接/口令消息回复bj
+5、新增ccwav四大查询资产全局插件,用法：cb n,bc n,bb n,bd n，js依赖脚本到 [QL_DIYBOT](https://github.com/ccwav/QL_DIYBOT/tree/main/Script) 仓库 拉库\
+6、新增WALL_E全局京东口令解析插件，用法:选中一个京东口令消息回复jx \
+7、新增京东、淘宝历史比价插件(适配pkc,下载[bj_pkc插件](https://raw.githubusercontent.com/msechen/JD_Diy/main/pkc/user/bj_pkc.py))，用法：选中一个京东链接、淘宝链接/口令消息回复bj
 
 不定时更新插件
 
