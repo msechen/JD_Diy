@@ -13,7 +13,6 @@ user_token=''
 
 3、有任何使用问题反馈给狗哥https://t.me/wogouge
 '''
-
 @user.on(events.NewMessage(pattern=r'^bj', outgoing=True))
 async def bj_bot(event):
     msg_text = await event.get_reply_message() 
