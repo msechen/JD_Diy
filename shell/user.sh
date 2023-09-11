@@ -7,7 +7,7 @@ else
 fi
 
 #升级最新版telethon客户端
-pip3 install telethon --upgrade
+pip3 install Telethon==1.24.0
 
 dir_jbot=$root/jbot
 dir_diy=$dir_jbot/diy
