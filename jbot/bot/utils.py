@@ -113,18 +113,18 @@ def press_event(user_id):
 async def cmd(cmdtext):
     '''定义执行cmd命令'''
     try:
-        #msg = await jdbot.send_message(chat_id, '开始执行命令')
+        msg = await jdbot.send_message(chat_id, '开始执行命令')
         p = await asyncio.create_subprocess_shell(
             cmdtext, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         res_bytes, res_err = await p.communicate()
         res = res_bytes.decode('utf-8')
         if res.find('先登录') > -1:
-            #await jdbot.delete_messages(chat_id, msg)
+            await jdbot.delete_messages(chat_id, msg)
             res, msg = ql_login()
-            #await jdbot.send_message(chat_id, msg)
+            await jdbot.send_message(chat_id, msg)
             return
         if len(res) == 0:
-            #await jdbot.edit_message(msg, '已执行，但返回值为空')
+            await jdbot.edit_message(msg, '已执行，但返回值为空')
         elif len(res) <= 100:
             await jdbot.delete_messages(chat_id, msg)
             await jdbot.send_message(chat_id, res)
@@ -136,7 +136,7 @@ async def cmd(cmdtext):
             #await jdbot.send_message(chat_id, '执行结果较长，请查看日志', file=tmp_log)
             os.remove(tmp_log)
     except Exception as e:
-        #await jdbot.send_message(chat_id, f'something wrong,I\'m sorry\n{str(e)}')
+        await jdbot.send_message(chat_id, f'something wrong,I\'m sorry\n{str(e)}')
         logger.error(f'something wrong,I\'m sorry\n{str(e)}')
 
 
@@ -532,53 +532,3 @@ def env_manage_QL(fun, envdata, token):
         res = {'code': 400, 'data': str(e)}
     finally:
         return res
-    
-    
-def reContent_INVALID(text):
-    replaceArr = ['_', '*', '~']
-    for i in replaceArr:
-        t = ''
-        for a in range(5):
-            t += i
-        text = re.sub('\%s{6,}' % i, t, text)
-    return text
-
-
-async def execute(msg, info, exectext):
-    """
-    执行命令
-    """
-    try:
-        info += f'\n\n==========📣开始执行脚本📣=========\n'
-        msg = await msg.edit(info)
-        p = await asyncio.create_subprocess_shell(exectext, shell=True, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, env=os.environ)
-        res_bytes, res_err = await p.communicate()
-        res = res_bytes.decode('utf-8')
-        if len(res) == 0:
-            info += '\n已执行，但返回值为空'
-            await msg.edit(info)
-            return
-        else:
-            try:
-                logtime = f'执行时间：' + re.findall(r'脚本执行- 北京时间.UTC.8.：(.*?)=', res, re.S)[0] + '\n'
-                info += logtime
-            except:
-                pass
-            errinfo = '\n\n**——‼错误代码493，IP可能黑了‼——**\n' if re.search('Response code 493', res) else ''
-            if len(info + res + errinfo) <= 4000:
-                await msg.edit(info + res + errinfo)
-            elif len(info + res + errinfo) > 4000:
-                tmp_log = f'{LOG_DIR}/bot/{exectext.split("/")[-1].split(".js")[0].split(".py")[0].split(".sh")[0].split(".ts")[0].split(" ")[-1]}-{datetime.datetime.now().strftime("%H-%M-%S.%f")}.log'
-                with open(tmp_log, 'w+', encoding='utf-8') as f:
-                    f.write(res)
-                await msg.delete()
-                await jdbot.send_message(chat_id, f'{info}\n执行结果较长，请查看日志{errinfo}', file=tmp_log)
-                os.remove(tmp_log)
-    except Exception as e:
-        title = "【💥错误💥】"
-        name = "文件名：" + os.path.split(__file__)[-1].split(".")[0]
-        function = "函数名：" + e.__traceback__.tb_frame.f_code.co_name
-        details = "错误详情：第 " + str(e.__traceback__.tb_lineno) + " 行"
-        tip = '建议百度/谷歌进行查询'
-        await jdbot.send_message(chat_id, f"{title}\n\n{name}\n{function}\n错误原因：{str(e)}\n{details}\n{traceback.format_exc()}\n{tip}")
-        logger.error(f"错误--->{str(e)}")
