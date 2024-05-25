@@ -113,18 +113,18 @@ def press_event(user_id):
 async def cmd(cmdtext):
     '''定义执行cmd命令'''
     try:
-        msg = await jdbot.send_message(chat_id, '开始执行命令')
+        #msg = await jdbot.send_message(chat_id, '开始执行命令')
         p = await asyncio.create_subprocess_shell(
             cmdtext, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         res_bytes, res_err = await p.communicate()
         res = res_bytes.decode('utf-8')
         if res.find('先登录') > -1:
-            await jdbot.delete_messages(chat_id, msg)
+            #await jdbot.delete_messages(chat_id, msg)
             res, msg = ql_login()
-            await jdbot.send_message(chat_id, msg)
+            #await jdbot.send_message(chat_id, msg)
             return
         if len(res) == 0:
-            await jdbot.edit_message(msg, '已执行，但返回值为空')
+            #await jdbot.edit_message(msg, '已执行，但返回值为空')
         elif len(res) <= 100:
             await jdbot.delete_messages(chat_id, msg)
             await jdbot.send_message(chat_id, res)
@@ -133,10 +133,10 @@ async def cmd(cmdtext):
             with open(tmp_log, 'w+', encoding='utf-8') as f:
                 f.write(res)
             await jdbot.delete_messages(chat_id, msg)
-            await jdbot.send_message(chat_id, '执行结果较长，请查看日志', file=tmp_log)
+            #await jdbot.send_message(chat_id, '执行结果较长，请查看日志', file=tmp_log)
             os.remove(tmp_log)
     except Exception as e:
-        await jdbot.send_message(chat_id, f'something wrong,I\'m sorry\n{str(e)}')
+        #await jdbot.send_message(chat_id, f'something wrong,I\'m sorry\n{str(e)}')
         logger.error(f'something wrong,I\'m sorry\n{str(e)}')
 
 
